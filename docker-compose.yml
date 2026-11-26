@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: notes
+      POSTGRES_DB: notes
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./.docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+  redis:
+    image: redis:7
+    # The queue's jobs and the locks live here: keep them on disk, and never evict them.
+    command: redis-server --appendonly yes --maxmemory-policy noeviction
+    ports:
+      - '6379:6379'
